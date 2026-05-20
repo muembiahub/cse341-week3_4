@@ -5,10 +5,9 @@
     "description": "CSE 341 Hospital  Project API Documentation",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "cse341-week3-4-jzku.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http",
     "https"
   ],
   "paths": {
@@ -107,28 +106,28 @@
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "lastName": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "age": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "gender": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "diagnosis": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "admissionDate": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "status": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "doctor": {
-                  "example": "any"
+                  "example": "You have to change this "
                 }
               }
             }
@@ -155,13 +154,13 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "specialty": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "department": {
-                  "example": "any"
+                  "example": "You have to change this "
                 }
               }
             }
@@ -248,28 +247,28 @@
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "lastName": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "age": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "gender": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "diagnosis": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "admissionDate": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "status": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "doctor": {
-                  "example": "any"
+                  "example": "You have to change this "
                 }
               }
             }
@@ -302,13 +301,13 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "specialty": {
-                  "example": "any"
+                  "example": "You have to change this "
                 },
                 "department": {
-                  "example": "any"
+                  "example": "You have to change this "
                 }
               }
             }

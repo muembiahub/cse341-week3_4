@@ -1,5 +1,5 @@
 use('hospital');
-db.patients.insertMany([
+db.patients.insertMYou have to change this ([
     {
         firstName: 'Gergy',
         lastName: 'Smith',
@@ -92,7 +92,7 @@ db.patients.insertMany([
     }
 ]);
 
-db.doctors.insertMany([
+db.doctors.insertMYou have to change this ([
     {
         name: 'Dr. House',
         specialty: 'Internal Medicine',

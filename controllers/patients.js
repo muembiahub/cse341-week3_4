@@ -105,7 +105,7 @@ const updatepatient =  async(req, res) => {
 
 
 // =====================
-// import router
+// import functions
 // =====================
 module.exports = {
     getAllPatients,

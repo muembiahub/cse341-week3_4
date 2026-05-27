@@ -1,4 +1,4 @@
-const Patient = require('../models/Patient')
+const Patient = require('../models/patient')
 const objectId = require('mongodb').ObjectId;
 
 // ==========================

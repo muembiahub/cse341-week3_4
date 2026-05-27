@@ -1,74 +1,67 @@
-const mongodb = require('../config/database');
+const Doctor = require('../models/Doctor');
 const objectId = require('mongodb').ObjectId;
 
 
-
+// =================================================
 //  controller for doctor collection in mongodb
-const getAlldoctors =  async(req, res) => {
-    const doctors = await mongodb
-    .getdatabase()
-    .db('hospital')
-    .collection('doctors')
-    .find()
-    .toArray();
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(doctors);    
-};
+// =================================================
 
+const getAlldoctors =  async(req, res) => {
+    try{
+        const doctors = await Doctor.find();
+        return res.status(200).json(doctors);
+    }catch (error) {
+        console.error("Error fetching doctors:", error.message);
+        res.status(500).json({ message: "Server error while fetching doctors." });
+    }
+}
+
+// ======================
 // get patient by id
+// ======================
+
 const getdoctorById=  async(req, res) => {
     const doctorId = new objectId(req.params.id);
-    const doctors = await mongodb
-    .getdatabase()
-    .db('hospital')
-    .collection('doctors')
+    const doctors = await Doctor
     .find({ _id: doctorId});
-    doctors.toArray().then(doctors => {
         if(doctors) {
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(doctors);    
         } else {
             res.status(404).json({message: 'No patient found'});
         }
-    })  
-};
+    };
 
+// ========================
 //  create doctor
+// ========================
+
 const createdoctor =  async(req, res) => {
-    const newdoctor ={
+    try {
+    const newdoctor = await Doctor.create({
     "name": req.body.name,
     "specialty": req.body.specialty,
     "department": req.body.department
-    }
+    });
+    res.setHeader('Content-Type', 'application/json')
+    res.status(201).json(newdoctor);
+     }
+     catch (error) {
+        console.error("Error creating doctor:", error.message);
+        res.status(500).json({ message: "Server error while creating doctor." });
+    }}
 
-    const response = await mongodb
-    .getdatabase()
-    .db('hospital')
-    .collection('doctors')
-    .insertOne(newdoctor);
-
-        if(response.acknowledged) {
-            res.status(201).json({
-                message: 'Doctor added successfully',
-                id: Response.insertedId
-            });
-        } else {
-            res.status(500).json({message: 'Doctor not created'});
-        }
-    }
-// 
+// =================
+//  delete doctor
+// =================
 
 const deletedoctor =  async(req, res) => {
   const doctorId = new objectId(req.params.id);
-//    check if id is valid
     if(!objectId.isValid(doctorId)) {
         return res.status(400).json({message: 'Invalid doctor id'});
        
     }
-    const response = await mongodb
-    .getdatabase()
-    .db('hospital')
-    .collection('doctors')
+    const response = await Doctor
     .deleteOne({ _id: doctorId});
            if(response.deletedCount > 0) {
             res.status(200).json({
@@ -82,8 +75,10 @@ const deletedoctor =  async(req, res) => {
             res.status(500).json({message: ' Doctor not deleted'});
         }
     }
-
-    const updatedoctor =  async(req, res) => {
+// ==========================
+//  update doctor
+// ==========================
+const updatedoctor =  async(req, res) => {
     const doctorId = new objectId(req.params.id);
     const newdoctor = {
     "name": req.body.name,
@@ -91,10 +86,7 @@ const deletedoctor =  async(req, res) => {
     "department": req.body.department
     }
 
-    const response = await mongodb
-    .getdatabase()
-    .db('hospital')
-    .collection('doctors')
+    const response = await Doctor
     .replaceOne({ _id: doctorId}, newdoctor);
 
         if(response.modifiedCount > 0) {
@@ -103,6 +95,9 @@ const deletedoctor =  async(req, res) => {
             res.status(500).json({message: 'Doctor not updated'});
         }
     }
+// =====================
+//  export functions
+// =====================
 
 module.exports = {
     getAlldoctors,

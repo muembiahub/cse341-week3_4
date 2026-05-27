@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Contacts API",
-    "description": "CSE 341 Hospital  Project API Documentation",
+    "title": "Hospital Management API",
+    "description": "CSE 341 Hospital Project API with Swagger, authentication and CRUD operations",
     "version": "1.0.0"
   },
   "host": "cse341-week3-4-jzku.onrender.com",
@@ -10,46 +10,130 @@
   "schemes": [
     "https"
   ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Please enter your token in the format: Bearer <your_JWT_token>"
+    }
+  },
   "paths": {
-    "/": {
-      "get": {
+    "/register": {
+      "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "role": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/patient": {
       "get": {
-        "description": "",
+        "tags": [
+          "Patients"
+        ],
+        "description": "Retrieve a list of all patients.",
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
-      }
-    },
-    "/doctor": {
-      "get": {
-        "description": "",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+        },
+        "security": [
+          {
+            "BearerAuth": []
           }
-        }
+        ]
       }
     },
     "/patient/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Patients"
+        ],
+        "description": "Retrieve a single patient by their unique ID.",
         "produces": [
           "application/json"
         ],
@@ -59,29 +143,10 @@
             "in": "path",
             "required": true,
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/doctor/{id}": {
-      "get": {
-        "description": "",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -89,16 +154,41 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/patient/create": {
       "post": {
-        "description": "",
+        "tags": [
+          "Patients"
+        ],
+        "description": "Register a new patient into the hospital system.",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -106,28 +196,28 @@
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "lastName": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "age": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "gender": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "diagnosis": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "admissionDate": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "status": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "doctor": {
-                  "example": "You have to change this "
+                  "example": "any"
                 }
               }
             }
@@ -137,107 +227,42 @@
           "201": {
             "description": "Created"
           },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/doctor/create": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "You have to change this "
-                },
-                "specialty": {
-                  "example": "You have to change this "
-                },
-                "department": {
-                  "example": "You have to change this "
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/patient/delete/{id}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
           "400": {
             "description": "Bad Request"
           },
-          "404": {
-            "description": "Not Found"
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
-      }
-    },
-    "/doctor/delete/{id}": {
-      "delete": {
-        "description": "",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "BearerAuth": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
+        ]
       }
     },
     "/patient/update/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Patients"
+        ],
+        "description": "Update details of an existing patient.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -247,28 +272,28 @@
               "type": "object",
               "properties": {
                 "firstName": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "lastName": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "age": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "gender": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "diagnosis": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "admissionDate": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "status": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "doctor": {
-                  "example": "You have to change this "
+                  "example": "any"
                 }
               }
             }
@@ -278,20 +303,165 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
-    "/doctor/update/{id}": {
-      "put": {
-        "description": "",
+    "/patient/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Patients"
+        ],
+        "description": "Remove a patient record permanently from the database.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/doctor": {
+      "get": {
+        "tags": [
+          "Doctors"
+        ],
+        "description": "Retrieve a list of all doctors.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/doctor/{id}": {
+      "get": {
+        "tags": [
+          "Doctors"
+        ],
+        "description": "Retrieve a single doctor by their unique ID.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/doctor/create": {
+      "post": {
+        "tags": [
+          "Doctors"
+        ],
+        "description": "Add a new doctor to the clinic roster.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -301,13 +471,74 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "specialty": {
-                  "example": "You have to change this "
+                  "example": "any"
                 },
                 "department": {
-                  "example": "You have to change this "
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/doctor/update/{id}": {
+      "put": {
+        "tags": [
+          "Doctors"
+        ],
+        "description": "Modify an existing doctor profile.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "specialty": {
+                  "example": "any"
+                },
+                "department": {
+                  "example": "any"
                 }
               }
             }
@@ -317,10 +548,70 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/doctor/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Doctors"
+        ],
+        "description": "Remove a doctor profile from the system.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     }
   }

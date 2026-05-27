@@ -4,95 +4,116 @@ Accept: application/json
 
 ###
 
+# @name login
+POST http://localhost:3000/login HTTP/1.1
+Content-Type: application/json
 
-GET http://localhost:3000/patient
-Host: localhost:3000
-Accept: application/json
+{
+    "email": "glade@yahoo.com",
+    "password": "12345678"
+}
 
+###
+@token = {{login.response.body.token}}
+
+# @name getPatients
+GET http://localhost:3000/patient HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:3000/doctor
-Host: localhost:3000
-Accept: application/json
-
-
-###
-GET http://localhost:3000/patient/6a0b52824eddb33bb8692810 HTTP/1.1
-Host: localhost:3000
-Accept: application/json
-
-###
-GET http://localhost:3000/doctor/6a0b52844eddb33bb869281d HTTP/1.1
-Host: localhost:3000
-Accept: application/json
+# @name getPatient
+GET http://localhost:3000/patient/629b6d8c4e9f7f8f7f8f7f8f HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ###
 
-
+# @name addPatient
 POST http://localhost:3000/patient/create HTTP/1.1
-Host: localhost:3000
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer {{token}}
 
 {
-    "firstName": "Joseph",
-    "lastName": "New",
-    "age": 50,
-    "gender": "Female",
-    "diagnosis": "Diabetes",
-    "admissionDate": "2023-01-20",
-    "status": "Outpatient",
-    "doctor": "Dr. Mike"
-}
-
-###
-
-POST http://localhost:3000/doctor/create HTTP/1.1
-Content-Type: application/json
-
-{
-    "name": "Dr. Jonathan New",
-    "specialty": "General Practice",
-    "department": "Outpatient Clinic"
-}
-
-###
-
-PUT http://localhost:3000/patient/update/6a0b52824eddb33bb8692810 HTTP/1.1
-Content-Type: application/json
-
-{
-
-    "firstName": "Gergy",
-    "lastName": "New",
+    "firstName": "John",
+    "lastName": "Doe",
     "age": 30,
     "gender": "Male",
-    "diagnosis": "Flu",
-    "admissionDate": "2023-01-15",
-    "status": "Outpatient",
-    "doctor": "Dr. Mike"
+    "diagnosis": "Diabetes",
+    "admissionDate": "2022-01-01",
+    "status": "Admitted",
+    "doctor": "Dr. Smith"
 }
+
 ###
 
-PUT http://localhost:3000/doctor/update/6a0b52844eddb33bb869281d HTTP/1.1
+# @name updatePatient
+PUT http://localhost:3000/patient/update/6a16c7ca51232ad10cb17e90 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-    "name": "Dr. Mike new",
-    "specialty": "General Practice",
-    "department": "Outpatient Clinic"
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 31,
+    "gender": "Male",
+    "diagnosis": "Diabetes",
+    "admissionDate": "2022-01-01",
+    "status": "Discharged",
+    "doctor": "Dr. Smith"
 }
 
 ###
 
-DELETE http://localhost:3000/patient/delete/6a0b52824eddb33bb8692810 HTTP/1.1
-Host: localhost:3000
-Accept: application/json
+# @name deletePatient
+DELETE http://localhost:3000/patient/delete/6a16c7ca51232ad10cb17e90 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name getDoctors
+GET http://localhost:3000/doctor HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ###
 
-DELETE http://localhost:3000/doctor/delete/6a0c2ffdfcf5631041e245ef HTTP/1.1
-Host: localhost:3000
-Accept: application/json
+# @name getDoctorbyId
+GET http://localhost:3000/doctor/6a0b52844eddb33bb869281c HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# @name addDoctor
+POST http://localhost:3000/doctor/create HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Dr. Smith",
+    "specialty": "Cardiology",
+    "department": "Cardiology"
+}
+
+###
+
+# @name updateDoctor
+PUT http://localhost:3000/doctor/update/629b6d8c4e9f7f8f7f8f7f8f HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Dr. Smith",
+    "specialty": "Cardiology",
+    "department": "Neurology"
+}
+
+###
+
+# @name deleteDoctor
+DELETE http://localhost:3000/doctor/delete/629b6d8c4e9f7f8f7f8f7f8f HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 

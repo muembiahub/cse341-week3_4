@@ -1,39 +1,25 @@
-GET http://localhost:3000/
-Host: localhost:3000
-Accept: application/json
+
 
 ###
-
-# @name login
-POST http://localhost:3000/login HTTP/1.1
-Content-Type: application/json
-
-{
-    "email": "glade@yahoo.com",
-    "password": "12345678"
-}
-
-###
-@token = {{login.response.body.token}}
 
 # @name getPatients
 GET http://localhost:3000/patient HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 ###
 
 # @name getPatient
 GET http://localhost:3000/patient/6a0b52824eddb33bb8692813 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 ###
 
 # @name addPatient
 POST http://localhost:3000/patient/create HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 {
     "firstName": "John",
@@ -51,7 +37,7 @@ Authorization: Bearer {{token}}
 # @name updatePatient
 PUT http://localhost:3000/patient/update/6a0b52824eddb33bb8692813 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 {
     "firstName": "John",
@@ -69,27 +55,28 @@ Authorization: Bearer {{token}}
 # @name deletePatient
 DELETE http://localhost:3000/patient/delete/6a0b52824eddb33bb8692813 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 ###
+
 # @name getDoctors
 GET http://localhost:3000/doctor HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 ###
 
 # @name getDoctorbyId
 GET http://localhost:3000/doctor/6a0b52844eddb33bb869281c HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 ###
 
 # @name addDoctor
 POST http://localhost:3000/doctor/create HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 {
     "name": "Dr. Smith",
@@ -102,7 +89,7 @@ Authorization: Bearer {{token}}
 # @name updateDoctor
 PUT http://localhost:3000/doctor/update/6a0b52844eddb33bb869281c HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
+X-Dev-Bypass: true
 
 {
     "name": "Dr. Smith",
@@ -115,5 +102,4 @@ Authorization: Bearer {{token}}
 # @name deleteDoctor
 DELETE http://localhost:3000/doctor/delete/6a0b52844eddb33bb869281c HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer {{token}}
-
+X-Dev-Bypass: true

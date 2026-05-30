@@ -1,71 +1,47 @@
-const User = require('../models/user'); 
-const bcrypt = require('bcryptjs');          
-const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
-exports.register = async (req, res) => {
-    try {
-        const { name, email, password, role } = req.body;
-        const userExist = await User.findOne({ email: email });
+// =================================================
+// 1. TRIGGER GITHUB LOGIN
+// =================================================
+exports.login = (req, res, next) => {
+    passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+};
 
-        if (userExist) {
-            return res.status(400).json({ status: "error", message: `${email} already exists` });
+// =================================================
+// 2. GITHUB AUTHENTICATION CALLBACK HANDLER
+// =================================================
+exports.githubCallback = (req, res, next) => {
+    passport.authenticate('github', (err, user, info) => {
+        if (err) {
+            console.error("OAuth Callback System Error:", err.message);
+            return res.status(500).json({ status: "error", message: "Internal server authentication crash." });
         }
-
-        const user = new User({ name, email, password, role });
-        await user.save();
         
-        res.status(201).json({ status: "success", message: 'User registered successfully' });
-
-    } catch (err) {
-        res.status(500).json({ status: "error", message: "User registration failed", error: err.message });
-    }
-};
-
-// LOGIN
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        const userExist = await User.findOne({ email });
-        if (!userExist) {
-            return res.status(401).json({ status: "error", message: `${email} does not exist` });
+        if (!user) {
+            return res.redirect('/api-docs');
         }
 
-        const isMatch = await bcrypt.compare(password, userExist.password);
-        if (!isMatch) {
-            return res.status(401).json({ status: "error", message: 'Invalid password' });
-        }
-
-        const token = jwt.sign(
-            { id: userExist._id, email: userExist.email, role: userExist.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        if (userExist.role === "admin") {
-            return res.status(200).json({ 
-                status: "success", 
-                message: 'Admin logged in successfully', 
-                token: token 
-            });
-        }
-
-        return res.status(200).json({ 
-            status: "success", 
-            message: 'User logged in successfully', 
-            token: token 
+        req.logIn(user, (loginErr) => {
+            if (loginErr) {
+                console.error("Session Binding Error:", loginErr.message);
+                return res.status(500).json({ status: "error", message: "Could not establish server session." });
+            }
+            
+            return res.redirect('/api-docs');
         });
-
-    } catch (err) {
-        console.error("Login controller error:", err.message);
-        res.status(500).json({ status: "error", message: err.message });
-    }
+    })(req, res, next);
 };
 
-exports.logout = async (req, res) => {
-    try {
-        res.status(200).json({ status: "success", message: "Logged out successfully" });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+// =================================================
+// 3. SECURE LOGOUT HANDLER
+// =================================================
+exports.logout = (req, res, next) => {
+    req.logout((err) => {
+        if (err) { 
+            console.error("Logout runtime error:", err.message);
+            return next(err); 
+        }
+        
+        return res.redirect('/api-docs');
+    });
 };

@@ -15,18 +15,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Dynamic CORS Configuration for Session Cookies
 app.use((req, res, next) => {
-    const allowedOrigins = ['http://localhost:3000', 'https://onrender.com'];
+    const allowedOrigins = [
+    'http://localhost:3000', 
+    'https://cse341-week3-4-jzku.onrender.com'
+];
     const origin = req.headers.origin;
     
     // 🔑 If request matches your local or live Render domain, echo the origin
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     } else {
-        // Fallback for Swagger UI page direct navigations
         res.setHeader('Access-Control-Allow-Origin', origin || '*');
     }
     
-    // 🔑 CRITICAL: Explicitly allow the browser to pass the session cookies (connect.sid)
     res.setHeader('Access-Control-Allow-Credentials', 'true'); 
     
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Z-key');
@@ -40,7 +41,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        // Secure settings: automatic adjustment for HTTP (local) vs HTTPS (Render production)
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }

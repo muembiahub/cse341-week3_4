@@ -35,8 +35,8 @@
       "get": {
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

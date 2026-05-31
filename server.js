@@ -15,7 +15,7 @@ app.enable('trust proxy');
 app
    .use(bodyParser.json())
    .use(session(
-    { secret: process.env.SESSION_SECRET || '3hG9!kLp2$mNxQ7v_sW9zA4bC1v_HospitalProject341',
+    { secret: process.env.SESSION_SECRET ||"",
      resave: false, 
      saveUninitialized: false,
      cookie: {

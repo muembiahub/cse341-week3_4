@@ -10,18 +10,20 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+// Trust Render's reverse proxy for secure cookie handling
 app.enable('trust proxy'); 
 
 app
    .use(bodyParser.json())
-   .use(session(
-    { secret: process.env.SESSION_SECRET ||"",
+   .use(session({ 
+     secret: process.env.SESSION_SECRET || "fallback_secret_key",
      resave: false, 
      saveUninitialized: false,
      cookie: {
-         secure:  process.env.NODE_ENV === 'production',
+         secure: process.env.NODE_ENV === 'production',
          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-         }}))
+     }
+   }))
    .use(passport.initialize())
    .use(passport.session())
    .use((req, res, next) => {
@@ -29,24 +31,22 @@ app
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Z-key');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     next(); 
-})
-.use(cors({method:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']}))
-.use(cors({origin: '*'}))
-.use('/', require('./routes/swagger'))
-.use('/', require('./routes/auth'))
-.use('/', require('./routes/hospital'));
+   })
+   .use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] }))
+   .use(cors({ origin: '*' }))
+   .use('/', require('./routes/swagger'))
+   .use('/', require('./routes/hospital'));
 
-
+// Configured GitHub Strategy with the correct live app URL path
 passport.use(new GithubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "https://onrender.com"
   },
   function(accessToken, refreshToken, profile, done) {
-    // User.findOrCreate({ githubId: profile.id }, function (err, user) {
       return done(null, profile);
-    // });
-}))
+  }
+));
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -65,8 +65,6 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
     req.session.user = req.user;
     res.redirect('/');
 });
-
-
 
 const startServer = async () => {
     try {

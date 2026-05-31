@@ -1,11 +1,15 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const authController = require('../controllers/auth.js');
 
-router.get('/login', authController.login);
+router.get('/login', passport.authenticate('github'),(req, res) => {});
 
-router.get('/auth/github/callback', authController.githubCallback);
 
-router.get('/logout', authController.logout);
+router.get('/logout', function(req, res){
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+});
 
 module.exports = router;

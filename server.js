@@ -1,46 +1,64 @@
 require('dotenv').config(); 
+const connectDB = require('./config/database');
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session'); 
 const passport = require('passport');       
-const connectDB = require('./config/database');
-require('./config/passport');              
+const GithubStrategy = require('passport-github2').Strategy;
+const cors = require('cors');
 
-const app = express();
 const PORT = process.env.PORT || 3000;
+const app = express();
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (origin === 'https://onrender.com') {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    } else {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-    }
+app
+   .use(bodyParser.json())
+   .use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }))
+   .use(passport.initialize())
+   .use(passport.session())
+   .use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true'); 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Z-key');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     next(); 
+})
+.use(cors({method:['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']}))
+.use(cors({origin: '*'}))
+.use('/', require('./routes/swagger'))
+.use('/', require('./routes/auth'))
+.use('/', require('./routes/hospital'));
+
+
+passport.use(new GithubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK_URL
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // User.findOrCreate({ githubId: profile.id }, function (err, user) {
+      return done(null, profile);
+    // });
+}))
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
 });
 
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: true,
-        sameSite: 'none'
-    }
-}));
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.get('/', (req, res) => {
+    res.send(req.session?.user ? `Logged in as ${req.session.user.displayName}` : 'Logged out');
+});
 
-app.use('/', require('./routes/swagger'));
-app.use('/', require('./routes/auth'));
-app.use('/', require('./routes/hospital'));
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/api-docs', session: true }),
+(req, res) => {
+    req.session.user = req.user;
+    res.redirect('/');
+});
+
+
 
 const startServer = async () => {
     try {

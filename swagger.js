@@ -15,7 +15,6 @@ const outputFile = './swagger.json';
 
 // All route endpoint source files combined
 const routesEndpointsFiles = [
-    './routes/auth.js',
     './routes/hospital.js'
 ];
 

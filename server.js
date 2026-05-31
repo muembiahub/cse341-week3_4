@@ -10,10 +10,18 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+app.enable('trust proxy'); 
 
 app
    .use(bodyParser.json())
-   .use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }))
+   .use(session(
+    { secret: process.env.SESSION_SECRET || '3hG9!kLp2$mNxQ7v_sW9zA4bC1v_HospitalProject341',
+     resave: false, 
+     saveUninitialized: false,
+     cookie: {
+         secure:  process.env.NODE_ENV === 'production',
+         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+         }}))
    .use(passport.initialize())
    .use(passport.session())
    .use((req, res, next) => {

@@ -35,6 +35,7 @@ app
    .use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] }))
    .use(cors({ origin: '*' }))
    .use('/', require('./routes/swagger'))
+   .use('/', require('./routes/auth'))
    .use('/', require('./routes/hospital'));
 
 // Configured GitHub Strategy with the correct live app URL path
